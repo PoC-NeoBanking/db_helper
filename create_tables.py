@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, DateTime, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship, sessionmaker, declarative_base
 
 import os
 from dotenv import load_dotenv
@@ -36,7 +35,7 @@ class Transaction(Base):
     # Relationship to user
     user = relationship("User", back_populates="transactions")
 
-
+# print(os.getenv('DATABASE_URL'))
 engine = create_engine(os.getenv('DATABASE_URL'))
 
 # Create all tables in the engine
