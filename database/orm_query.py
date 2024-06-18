@@ -1,8 +1,7 @@
-from database.engine import Session
 from database.tables import User, Transaction
 
 
-def add_user(ipn, first_name, last_name, account_balance):
+def add_user(ipn, first_name, last_name, account_balance, Session):
     user = User(ipn=ipn, first_name=first_name, last_name=last_name, account_balance=account_balance)
     try:
         with Session.begin() as session:
@@ -13,7 +12,7 @@ def add_user(ipn, first_name, last_name, account_balance):
         return e
 
 
-def add_transaction(sender_id, receiver_id, transaction_amount, transaction_category):
+def add_transaction(sender_id, receiver_id, transaction_amount, transaction_category, Session):
     transaction = Transaction(sender_id=sender_id, receiver_id=receiver_id, transaction_amount=transaction_amount,
                               transaction_category=transaction_category)
     try:
@@ -25,7 +24,7 @@ def add_transaction(sender_id, receiver_id, transaction_amount, transaction_cate
         return e
 
 
-def get_all_users_with_transactions():
+def get_all_users_with_transactions(Session):
     with Session() as session:
         users = session.query(User).all()
         for number, user in enumerate(users):
@@ -44,7 +43,7 @@ def get_all_users_with_transactions():
             print()
 
 
-def get_user_by_ipn(ipn):
+def get_user_by_ipn(ipn, Session):
     with Session() as session:
         user = session.query(User).filter_by(ipn=ipn).first()
 
@@ -55,7 +54,7 @@ def get_user_by_ipn(ipn):
     return user
 
 
-def delete_user_by_ipn(ipn):
+def delete_user_by_ipn(ipn, Session):
     with Session() as session:
         try:
             user_to_delete = session.query(User).filter(User.ipn == ipn).first()
@@ -70,7 +69,7 @@ def delete_user_by_ipn(ipn):
             print(f"Error deleting user: {e}")
 
 
-def delete_transaction_by_id(transaction_id):
+def delete_transaction_by_id(transaction_id, Session):
     with Session() as session:
         try:
             transaction_to_delete = session.query(Transaction).filter_by(id=transaction_id).first()
@@ -85,7 +84,7 @@ def delete_transaction_by_id(transaction_id):
             print(f"Error deleting transaction: {e}")
 
 
-def get_all_ipns():
+def get_all_ipns(Session):
     with Session() as session:
         try:
             ipns = session.query(User.ipn).all()
@@ -97,7 +96,7 @@ def get_all_ipns():
             print(f'Error retrieving IPNs: {e}')
             return []
 
-def get_all_ids():
+def get_all_ids(Session):
     with Session() as session:
         try:
             ids = session.query(User.id).all()
