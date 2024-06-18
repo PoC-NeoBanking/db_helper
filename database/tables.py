@@ -2,8 +2,10 @@ from typing import List
 from sqlalchemy import String, Numeric, DateTime, func, ForeignKey, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship, DeclarativeBase
 
+
 class Base(DeclarativeBase):
     pass
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -35,6 +37,7 @@ class Transaction(Base):
 
     transaction_date: Mapped[DateTime] = mapped_column(DateTime, default=func.now())
     transaction_amount: Mapped[float] = mapped_column(Numeric(15, 2), nullable=False)
+    transaction_category: Mapped[str] = mapped_column(String(150), nullable=False)
 
     user = relationship(
         "User",
@@ -42,3 +45,11 @@ class Transaction(Base):
         back_populates="transactions",
         uselist=True
     )
+
+
+list_categories = ["Groceries", "Restaurants and Cafes", "Fuel and Auto Parts", "Travel and Hotels",
+                   "Entertainment and Cinemas", "Fashion and Clothing", "Electronics and Gadgets",
+                   "Furniture and Home Decor", "Pharmacies and Medical Services", "Online Stores",
+                   "Sporting Goods and Fitness", "Cosmetics and Personal Care", "Communication and Internet Services",
+                   "Children's Products and Toys", "Banking Services", "Auto Services", "Books and Stationery",
+                   "Building Materials", "Jewelry and Accessories", "Flowers and Gifts", "Personal Transfer"]

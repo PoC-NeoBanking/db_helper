@@ -13,8 +13,9 @@ def add_user(ipn, first_name, last_name, account_balance):
         return e
 
 
-def add_transaction(sender_id, receiver_id, transaction_amount):
-    transaction = Transaction(sender_id=sender_id, receiver_id=receiver_id, transaction_amount=transaction_amount)
+def add_transaction(sender_id, receiver_id, transaction_amount, transaction_category):
+    transaction = Transaction(sender_id=sender_id, receiver_id=receiver_id, transaction_amount=transaction_amount,
+                              transaction_category=transaction_category)
     try:
         with Session.begin() as session:
             session.add(transaction)
@@ -82,3 +83,28 @@ def delete_transaction_by_id(transaction_id):
         except Exception as e:
             session.rollback()
             print(f"Error deleting transaction: {e}")
+
+
+def get_all_ipns():
+    with Session() as session:
+        try:
+            ipns = session.query(User.ipn).all()
+            all_ipns = [ipn for (ipn,) in ipns]  # Повертаємо список інтегрованих значень ipn
+            # print(all_ipns)
+            return all_ipns
+        except Exception as e:
+            session.rollback()
+            print(f'Error retrieving IPNs: {e}')
+            return []
+
+def get_all_ids():
+    with Session() as session:
+        try:
+            ids = session.query(User.id).all()
+            all_ids = [id for (id,) in ids]  # Повертаємо список інтегрованих значень ipn
+            # print(all_ipns)
+            return all_ids
+        except Exception as e:
+            session.rollback()
+            print(f'Error retrieving IPNs: {e}')
+            return []
