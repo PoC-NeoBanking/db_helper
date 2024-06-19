@@ -8,7 +8,6 @@ from database.orm_query import (
     add_transaction,
 )
 
-from database.engine import Session
 
 def generate_random_users(n, min_balance, max_balance, session):
     """
@@ -27,12 +26,12 @@ def generate_random_users(n, min_balance, max_balance, session):
     print('Generation of users DONE')
 
 
-def generate_random_transaction(n, min_balance, max_balance, session):
+def generate_random_transaction(n, min_balance, max_balance, Session):
     """
     :param n: к-сть генерацій
     :return: None
     """
-    list_of_all_ids = get_all_ids(Session=session)
+    list_of_all_ids = get_all_ids(Session)
     for i in range(n):
         # print(f'transaction_{i}')
         sender = random.choice(list_of_all_ids)
@@ -48,5 +47,5 @@ def generate_random_transaction(n, min_balance, max_balance, session):
             receiver = random.choice(list_of_all_ids)
         sum_of_transaction = round(random.uniform(0, int(max_balance)), 2)
         category = random.choice(list_categories)
-        add_transaction(sender, receiver, transaction_amount=sum_of_transaction, transaction_category=category, Session=session)
+        add_transaction(sender, receiver, transaction_amount=sum_of_transaction, transaction_category=category, Session=Session)
     print('Generation of transaction DONE')

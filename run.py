@@ -54,7 +54,7 @@ class MainWindow(QMainWindow, Ui_db_helper):
         upper_limit = int(self.transactions_upperTransactedLimit_lineEdit.text())
         lower_limit = int(self.transactions_lowerTransactedLimit_lineEdit.text())
 
-        generate_random_transaction(entry_amount, lower_limit, upper_limit, session=self.Session)
+        generate_random_transaction(entry_amount, lower_limit, upper_limit, Session=self.Session)
 
 
 def main():
