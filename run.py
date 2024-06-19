@@ -16,6 +16,8 @@ class MainWindow(QMainWindow, Ui_db_helper):
         super().__init__()
         self.setupUi(self)
 
+        self.login_lineEdit.setFocus()
+
         self.setConnection_pushButton.clicked.connect(self.set_connection)
 
         self.createTables_pushButton.clicked.connect(self.create_db)
@@ -35,6 +37,9 @@ class MainWindow(QMainWindow, Ui_db_helper):
 
         self.engine = create_engine(url)
         self.Session = sessionmaker(bind=self.engine)
+
+        print("Connection: SUCCESS")
+        self.stackedWidget.setCurrentIndex(1)
 
     def create_db(self):
         Base.metadata.create_all(self.engine)
