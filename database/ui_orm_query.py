@@ -291,7 +291,7 @@ def save_to_yaml_together(Session):
         with open('data/transactions/transactions.yaml', 'w') as file:
             yaml.dump(transactions_data, file, default_flow_style=False, allow_unicode=True)
 
-    print("SUCCESS, saved all data in yalm TOGETHER")
+    print("SUCCESS, saved all data in yaml TOGETHER")
 
 
 def save_to_yaml_separately(Session):
@@ -327,7 +327,7 @@ def save_to_yaml_separately(Session):
 
             with open(f'data/users/user_{user.id}.yaml', 'w') as file:
                 yaml.dump(user_data, file, default_flow_style=False, allow_unicode=True)
-    print("SUCCESS, saved all data in yalm SEPARATELY")
+    print("SUCCESS, saved all data in yaml SEPARATELY")
 
 
 def serialize_data(obj):
