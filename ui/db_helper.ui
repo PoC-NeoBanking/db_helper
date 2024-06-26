@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>410</height>
+    <width>499</width>
+    <height>482</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,19 +25,19 @@
      <rect>
       <x>0</x>
       <y>10</y>
-      <width>501</width>
-      <height>391</height>
+      <width>491</width>
+      <height>471</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page_1">
      <widget class="QLineEdit" name="dbName_lineEdit">
       <property name="geometry">
        <rect>
         <x>370</x>
-        <y>150</y>
+        <y>190</y>
         <width>121</width>
         <height>20</height>
        </rect>
@@ -47,7 +47,7 @@
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>130</y>
+        <y>170</y>
         <width>71</width>
         <height>16</height>
        </rect>
@@ -60,7 +60,7 @@
       <property name="geometry">
        <rect>
         <x>380</x>
-        <y>130</y>
+        <y>170</y>
         <width>101</width>
         <height>16</height>
        </rect>
@@ -73,17 +73,20 @@
       <property name="geometry">
        <rect>
         <x>250</x>
-        <y>150</y>
+        <y>190</y>
         <width>113</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="placeholderText">
+       <string/>
       </property>
      </widget>
      <widget class="QLineEdit" name="password_lineEdit">
       <property name="geometry">
        <rect>
         <x>130</x>
-        <y>150</y>
+        <y>190</y>
         <width>113</width>
         <height>20</height>
        </rect>
@@ -96,7 +99,7 @@
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>130</y>
+        <y>170</y>
         <width>31</width>
         <height>16</height>
        </rect>
@@ -109,7 +112,7 @@
       <property name="geometry">
        <rect>
         <x>8</x>
-        <y>180</y>
+        <y>220</y>
         <width>481</width>
         <height>41</height>
        </rect>
@@ -122,7 +125,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>150</y>
+        <y>190</y>
         <width>113</width>
         <height>20</height>
        </rect>
@@ -132,7 +135,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>130</y>
+        <y>170</y>
         <width>47</width>
         <height>13</height>
        </rect>
@@ -146,9 +149,9 @@
      <widget class="QLineEdit" name="users_upperBalanceLimit_lineEdit">
       <property name="geometry">
        <rect>
-        <x>152</x>
+        <x>240</x>
         <y>160</y>
-        <width>161</width>
+        <width>111</width>
         <height>20</height>
        </rect>
       </property>
@@ -156,10 +159,10 @@
      <widget class="QLabel" name="label_8">
       <property name="geometry">
        <rect>
-        <x>16</x>
+        <x>10</x>
         <y>110</y>
-        <width>471</width>
-        <height>20</height>
+        <width>481</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
@@ -170,18 +173,18 @@
        </font>
       </property>
       <property name="text">
-       <string>USERS</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;USERS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="transactions_upperTransactedLimit_lineEdit">
+     <widget class="QLineEdit" name="user_ipn_toGeneration_lineEdit">
       <property name="geometry">
        <rect>
-        <x>152</x>
-        <y>300</y>
-        <width>161</width>
+        <x>240</x>
+        <y>240</y>
+        <width>111</width>
         <height>20</height>
        </rect>
       </property>
@@ -189,75 +192,75 @@
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>10</x>
         <y>140</y>
         <width>111</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Entry amount</string>
+       <string>Amount</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_11">
       <property name="geometry">
        <rect>
-        <x>338</x>
-        <y>280</y>
-        <width>151</width>
+        <x>120</x>
+        <y>220</y>
+        <width>51</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Lower transacted limit</string>
+       <string>User ID</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>240</x>
         <y>140</y>
-        <width>151</width>
+        <width>111</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Upper balance limit</string>
+       <string>Max balance</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
-        <x>338</x>
+        <x>120</x>
         <y>140</y>
-        <width>151</width>
+        <width>111</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Lower balance limit</string>
+       <string>Min balance</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_12">
       <property name="geometry">
        <rect>
-        <x>160</x>
-        <y>280</y>
-        <width>151</width>
+        <x>240</x>
+        <y>220</y>
+        <width>51</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Upper transacted limit</string>
+       <string>User IPN</string>
       </property>
      </widget>
      <widget class="QPushButton" name="transactions_createEntries_pushButton">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>330</y>
-        <width>481</width>
-        <height>51</height>
+        <x>360</x>
+        <y>220</y>
+        <width>131</width>
+        <height>41</height>
        </rect>
       </property>
       <property name="text">
@@ -269,7 +272,7 @@
        <rect>
         <x>10</x>
         <y>60</y>
-        <width>481</width>
+        <width>121</width>
         <height>41</height>
        </rect>
       </property>
@@ -280,22 +283,22 @@
      <widget class="QLabel" name="label_10">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>280</y>
+        <x>10</x>
+        <y>220</y>
         <width>111</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Entry amount</string>
+       <string>Amount</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="transactions_lowerTransactedLimit_lineEdit">
+     <widget class="QLineEdit" name="user_id_toGeneration_lineEdit">
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>300</y>
-        <width>161</width>
+        <x>120</x>
+        <y>240</y>
+        <width>111</width>
         <height>20</height>
        </rect>
       </property>
@@ -303,9 +306,9 @@
      <widget class="QLineEdit" name="transactions_entryAmount_lineEdit">
       <property name="geometry">
        <rect>
-        <x>12</x>
-        <y>300</y>
-        <width>121</width>
+        <x>10</x>
+        <y>240</y>
+        <width>101</width>
         <height>20</height>
        </rect>
       </property>
@@ -313,10 +316,10 @@
      <widget class="QLabel" name="label_9">
       <property name="geometry">
        <rect>
-        <x>16</x>
-        <y>250</y>
-        <width>471</width>
-        <height>20</height>
+        <x>10</x>
+        <y>190</y>
+        <width>481</width>
+        <height>21</height>
        </rect>
       </property>
       <property name="font">
@@ -327,7 +330,7 @@
        </font>
       </property>
       <property name="text">
-       <string>TRANSACTIONS</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TRANSACTIONS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -336,10 +339,10 @@
      <widget class="QPushButton" name="users_createEntries_pushButton">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>190</y>
-        <width>481</width>
-        <height>51</height>
+        <x>360</x>
+        <y>140</y>
+        <width>131</width>
+        <height>41</height>
        </rect>
       </property>
       <property name="text">
@@ -349,9 +352,9 @@
      <widget class="QLineEdit" name="users_entryAmount_lineEdit">
       <property name="geometry">
        <rect>
-        <x>12</x>
+        <x>10</x>
         <y>160</y>
-        <width>121</width>
+        <width>101</width>
         <height>20</height>
        </rect>
       </property>
@@ -361,7 +364,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>481</width>
+        <width>121</width>
         <height>41</height>
        </rect>
       </property>
@@ -372,11 +375,259 @@
      <widget class="QLineEdit" name="users_lowerBalanceLimit_lineEdit">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>120</x>
         <y>160</y>
-        <width>161</width>
+        <width>111</width>
         <height>20</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="showAll_users_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>270</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>All users</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="showAll_transactions_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>320</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>All transactions</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>193</x>
+        <y>220</y>
+        <width>21</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>or</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="oneFile_Json_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>10</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>One file</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="SeparatedFiles_Json_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>60</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Different files</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="oneFile_Yaml_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>10</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>One file</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="SeparatedFiles_Yaml_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>60</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Different files</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_14">
+      <property name="geometry">
+       <rect>
+        <x>283</x>
+        <y>20</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;&amp;lt;- JSON&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_15">
+      <property name="geometry">
+       <rect>
+        <x>283</x>
+        <y>70</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;YAML -&amp;gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="listWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>370</y>
+        <width>481</width>
+        <height>91</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ShowEverything_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>270</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>1 User + trans... -&gt;</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_18">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>270</y>
+        <width>51</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>User ID</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="user_id_toShowing_lineEdit_2">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>290</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="user_ipn_toShowing_lineEdit_2">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>290</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_16">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>270</y>
+        <width>51</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>User IPN</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_17">
+      <property name="geometry">
+       <rect>
+        <x>333</x>
+        <y>270</y>
+        <width>21</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>or</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="CountOfEverything_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>320</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>How?</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="ShowDetailesOfTransaction_pushButton_2">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>320</y>
+        <width>141</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>1 Transaction -&gt;</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="transcation_id_toShowing_lineEdit_4">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>340</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_37">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>320</y>
+        <width>111</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Transaction ID</string>
       </property>
      </widget>
     </widget>

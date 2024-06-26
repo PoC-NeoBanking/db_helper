@@ -1,20 +1,36 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
-
-from database.tables import Base
-
-from generators.generate_static_data import generate_random_users, generate_random_transaction
+import sys
 
 from PyQt6.QtWidgets import QMainWindow, QApplication
-from ui.db_helper_ui import Ui_db_helper
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-import sys
+from database.tables import Base
+from database.ui_orm_query import (
+    save_to_json_together,
+    save_to_yaml_together,
+    save_to_json_separately,
+    save_to_yaml_separately,
+    all_transactions,
+    all_users,
+    counts_of_users,
+    counts_of_transactions,
+    show_user_with_transactions,
+    show_details_of_transaction
+)
+from generators.ui_generate_static_data import (
+    generate_random_users,
+    generate_random_transaction
+)
+from ui.db_helper_ui import Ui_db_helper
 
 
 class MainWindow(QMainWindow, Ui_db_helper):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
+        self.engine = None
+        self.Session = None
 
         self.login_lineEdit.setFocus()
 
@@ -23,43 +39,163 @@ class MainWindow(QMainWindow, Ui_db_helper):
         self.createTables_pushButton.clicked.connect(self.create_db)
         self.dropDatabase_pushButton.clicked.connect(self.drop_db)
 
+        self.oneFile_Json_pushButton.clicked.connect(self.save_one_json)
+        self.SeparatedFiles_Json_pushButton.clicked.connect(self.save_separated_json)
+        self.oneFile_Yaml_pushButton.clicked.connect(self.save_one_yaml)
+        self.SeparatedFiles_Yaml_pushButton.clicked.connect(self.save_separated_yaml)
+
         self.users_createEntries_pushButton.clicked.connect(self.create_entries_users)
         self.transactions_createEntries_pushButton.clicked.connect(self.create_entries_transactions)
 
+        self.showAll_users_pushButton.clicked.connect(self.show_all_users)
+        self.showAll_transactions_pushButton.clicked.connect(self.show_all_transactions)
+        self.ShowEverything_pushButton.clicked.connect(self.show_one_user_with_transactions)
+        self.ShowDetailesOfTransaction_pushButton_2.clicked.connect(self.show_detailed_transaction)
+        self.CountOfEverything_pushButton.clicked.connect(self.count_of_everything)
 
     def set_connection(self):
-        login = self.login_lineEdit.text()
+        login = self.login_lineEdit.text() if self.login_lineEdit.text() != '' else 'postgres'
         password = self.password_lineEdit.text()
-        link = self.link_lineEdit.text()
+        link = self.link_lineEdit.text() if self.link_lineEdit.text() != '' else 'localhost'
         name = self.dbName_lineEdit.text()
-        
+
         url = f"postgresql+psycopg2://{login}:{password}@{link}/{name}"
 
-        self.engine = create_engine(url)
-        self.Session = sessionmaker(bind=self.engine)
-
-        print("Connection: SUCCESS")
-        self.stackedWidget.setCurrentIndex(1)
+        try:
+            self.engine = create_engine(url)
+            connection = self.engine.connect()
+            connection.close()
+            self.Session = sessionmaker(bind=self.engine)
+            self.stackedWidget.setCurrentIndex(1)
+            print("Successful connection")
+        except Exception as e:
+            print(f"Lost connection\n Smth went wrong: \n{e}")
 
     def create_db(self):
-        Base.metadata.create_all(self.engine)
+        try:
+            Base.metadata.create_all(self.engine)
+            print("Successfully created new db")
+        except Exception as e:
+            print(f"Smth went wrong during creating db: \n{e}")
 
     def drop_db(self):
         Base.metadata.drop_all(self.engine)
+        try:
+            Base.metadata.create_all(self.engine)
+            print("Successfully dropped db")
+        except Exception as e:
+            print(f"Smth went wrong during dropping db: \n{e}")
+
+    def show_all_users(self):
+        try:
+            all_data = all_users(Session=self.Session)
+            self.listWidget.clear()
+            for data in all_data:
+                self.listWidget.addItem(data)
+        except Exception as e:
+            print(e)
+
+    def show_all_transactions(self):
+        try:
+            self.listWidget.clear()
+            all_data = all_transactions(Session=self.Session)
+            for data in all_data:
+                self.listWidget.addItem(data)
+        except Exception as e:
+            print(e)
+
+    @staticmethod
+    def _is_number(s):
+        try:
+            float(s)
+            return True
+        except Exception:
+            return False
+
+    def show_one_user_with_transactions(self):
+        user_id = int(
+            self.user_id_toShowing_lineEdit_2.text()) if self._is_number(
+            self.user_id_toShowing_lineEdit_2.text()) else ''
+        user_ipn = int(
+            self.user_ipn_toShowing_lineEdit_2.text()) if self._is_number(
+            self.user_ipn_toShowing_lineEdit_2.text()) else ''
+        try:
+            self.listWidget.clear()
+            all_data = show_user_with_transactions(Session=self.Session, user_id=user_id, user_ipn=user_ipn)
+            for data in all_data:
+                self.listWidget.addItem(data)
+        except Exception as e:
+            print(e)
+
+    def show_detailed_transaction(self):
+        try:
+            transaction_id = int(
+                self.transcation_id_toShowing_lineEdit_4.text()) if self._is_number(
+                self.transcation_id_toShowing_lineEdit_4.text()) else ''
+            self.listWidget.clear()
+            all_data = show_details_of_transaction(Session=self.Session, transaction_id=transaction_id)
+            for data in all_data:
+                self.listWidget.addItem(data)
+        except Exception as e:
+            print(e)
+
+    def count_of_everything(self):
+        try:
+            self.listWidget.clear()
+            counts_users = counts_of_users(Session=self.Session)
+            counts_transactions = counts_of_transactions(Session=self.Session)
+            data = f'There are {counts_users} USERS'
+            self.listWidget.addItem(data)
+            data = f'There are {counts_transactions} TRANSACTIONS'
+            self.listWidget.addItem(data)
+        except Exception as e:
+            print(e)
 
     def create_entries_users(self):
-        entry_amount = int(self.users_entryAmount_lineEdit.text())
-        upper_limit = int(self.users_upperBalanceLimit_lineEdit.text())
-        lower_limit = int(self.users_lowerBalanceLimit_lineEdit.text())
-
-        generate_random_users(entry_amount, lower_limit, upper_limit, session=self.Session)
+        try:
+            entry_amount = int(self.users_entryAmount_lineEdit.text()) if self._is_number(
+                self.users_entryAmount_lineEdit.text()) else 0
+            lower_limit = int(self.users_lowerBalanceLimit_lineEdit.text()) if self._is_number(
+                self.users_lowerBalanceLimit_lineEdit.text()) else 1_000
+            upper_limit = int(self.users_upperBalanceLimit_lineEdit.text()) if self._is_number(
+                self.users_upperBalanceLimit_lineEdit.text()) else 50_000
+            if entry_amount != 0:
+                generate_random_users(self.Session, entry_amount, lower_limit, upper_limit, )
+            else:
+                print('Sorry, you not to write how much to create')
+        except Exception as e:
+            print(f'Maybe you missed some arguments: \n{e}')
 
     def create_entries_transactions(self):
-        entry_amount = int(self.transactions_entryAmount_lineEdit.text())
-        upper_limit = int(self.transactions_upperTransactedLimit_lineEdit.text())
-        lower_limit = int(self.transactions_lowerTransactedLimit_lineEdit.text())
+        try:
+            entry_amount = int(self.transactions_entryAmount_lineEdit.text()) if self._is_number(
+                self.transactions_entryAmount_lineEdit.text()) else 0
+            user_id = int(self.user_id_toGeneration_lineEdit.text()) if self._is_number(
+                self.user_id_toGeneration_lineEdit.text()) else ''
+            user_ipn = int(self.user_ipn_toGeneration_lineEdit.text()) if self._is_number(
+                self.user_ipn_toGeneration_lineEdit.text()) else ''
+            if entry_amount == 0:
+                print('Sorry, you not to write how much to create')
+            elif user_ipn != '':
+                generate_random_transaction(self.Session, entry_amount, user_ipn=int(user_ipn))
+            elif user_id != '':
+                generate_random_transaction(self.Session, entry_amount, user=int(user_id))
+            else:
+                generate_random_transaction(self.Session, entry_amount)
+        except Exception as e:
+            print(f'Smth went wrong: \n{e}')
 
-        generate_random_transaction(entry_amount, lower_limit, upper_limit, Session=self.Session)
+    def save_one_json(self):
+        save_to_json_together(Session=self.Session)
+
+    def save_separated_json(self):
+        save_to_json_separately(Session=self.Session)
+
+    def save_one_yaml(self):
+        save_to_yaml_together(Session=self.Session)
+
+    def save_separated_yaml(self):
+        save_to_yaml_separately(Session=self.Session)
 
 
 def main():
