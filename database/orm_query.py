@@ -176,7 +176,7 @@ def get_all_users_with_transactions_manual(limit=-1):
     :param: limit - к-сть юзерів, які мають вивестися, дефолтне значення = усі
     """
     if limit == -1:
-        limit = len(get_all_ids(Session))
+        limit = len(get_all_ids_manual(Session))
     with Session() as session:
         users = session.query(User).limit(limit).all()
         for number, user in enumerate(users):
@@ -270,7 +270,7 @@ def save_to_yaml_together_manual():
         with open('data/transactions/transactions.yaml', 'w') as file:
             yaml.dump(transactions_data, file, default_flow_style=False, allow_unicode=True)
 
-    print("SUCCESS, saved all data in yalm TOGETHER")
+    print("SUCCESS, saved all data in yaml TOGETHER")
 
 
 def save_to_yaml_separately_manual():
@@ -306,7 +306,7 @@ def save_to_yaml_separately_manual():
 
             with open(f'data/users/user_{user.id}.yaml', 'w') as file:
                 yaml.dump(user_data, file, default_flow_style=False, allow_unicode=True)
-    print("SUCCESS, saved all data in yalm SEPARATELY")
+    print("SUCCESS, saved all data in yaml SEPARATELY")
 
 
 def serialize_data(obj):
