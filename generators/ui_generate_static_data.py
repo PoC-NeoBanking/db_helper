@@ -38,8 +38,8 @@ def generate_random_transaction(Session, n, user=None, user_ipn=None):
 
     :param Session: сесія потрібна для роботи з бд
     :param n: к-сть генерацій
-    :param user: його id в бд або нічого не передавайте(OPTIONAL)
-    :param user_ipn:
+    :param user: id юзера в бд або нічого не передавайте(OPTIONAL)
+    :param user_ipn: ipn юзера
     :return: None
     """
     list_of_all_ids = get_all_ids(Session)
@@ -69,6 +69,6 @@ def generate_random_transaction(Session, n, user=None, user_ipn=None):
 
         if random_number == 1:
             first_user, second_user = second_user, first_user
-        new_transaction(Session, first_user, second_user, is_ipn=True)
+        new_transaction(Session, first_user, second_user, is_ipn=is_ipn)
 
     print('Generation of transaction DONE')

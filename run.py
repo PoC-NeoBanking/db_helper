@@ -55,9 +55,9 @@ class MainWindow(QMainWindow, Ui_db_helper):
 
     def set_connection(self):
         login = self.login_lineEdit.text() if self.login_lineEdit.text() != '' else 'postgres'
-        password = self.password_lineEdit.text()
+        password = self.password_lineEdit.text() if self.password_lineEdit.text() != '' else '7979'
         link = self.link_lineEdit.text() if self.link_lineEdit.text() != '' else 'localhost'
-        name = self.dbName_lineEdit.text()
+        name = self.dbName_lineEdit.text() if self.dbName_lineEdit.text() != '' else 'neobanking_test'
 
         url = f"postgresql+psycopg2://{login}:{password}@{link}/{name}"
 
