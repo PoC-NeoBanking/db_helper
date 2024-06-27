@@ -109,7 +109,6 @@ def new_transaction(Session, sender, receiver, sum_of_transaction=None, is_ipn=F
     :param sum_of_transaction: sum of transaction
     :param is_ipn: False OPTIONAL - if it's ipn or not
     """
-    # print(sender, receiver, is_ipn)
     with Session() as session:
         if is_ipn:
             user = session.query(User).filter_by(ipn=sender).first()
