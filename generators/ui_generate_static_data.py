@@ -1,4 +1,5 @@
 import random
+from datetime import datetime, timedelta
 
 import names
 
@@ -30,7 +31,28 @@ def generate_random_users(Session, n, min_balance, max_balance):
     print('Generation of users DONE')
 
 
-def generate_random_transaction(Session, n, user=None, user_ipn=None):
+def generate_random_date(start=None, end=None):
+    """
+    Генерує випадкову дату у заданому проміжку
+
+    :param start: Початок проміжку (нижче у змінній start - є потрібний вхідний формат дати)
+    :param end: Кінець проміжку (нижче у змінній end - є потрібний вхідний формат дати)
+    :return: Згенерована дата, у потрібному форматі
+    """
+    if not start:
+        start = "2023-01-01T00:00:00.000000"
+        end = "2024-01-01T00:00:00.000000"
+
+    start_date = datetime.strptime(start, '%Y-%m-%dT%H:%M:%S.%f')
+    end_date = datetime.strptime(end, '%Y-%m-%dT%H:%M:%S.%f')
+
+    random_seconds = random.uniform(0, (end_date - start_date).total_seconds())
+    random_date = start_date + timedelta(seconds=random_seconds)
+
+    return random_date.isoformat()
+
+
+def generate_random_transaction(Session, n, from_date=None, to_date=None,user=None, user_ipn=None):
     """
     Для генерації транзакцій(з допомогою консолі) для рандомних людей
     І такод для генерації транзакцій для якоїсь окремої людини по його id чи ipn, якщо воно є, інакше рандомні для всіх
@@ -38,6 +60,8 @@ def generate_random_transaction(Session, n, user=None, user_ipn=None):
 
     :param Session: сесія потрібна для роботи з бд
     :param n: к-сть генерацій
+    :param from_date: початок проміжку дати
+    :param to_date: кінець проміжку дати
     :param user: id юзера в бд або нічого не передавайте(OPTIONAL)
     :param user_ipn: ipn юзера
     :return: None
@@ -69,6 +93,8 @@ def generate_random_transaction(Session, n, user=None, user_ipn=None):
 
         if random_number == 1:
             first_user, second_user = second_user, first_user
-        new_transaction(Session, first_user, second_user, is_ipn=is_ipn)
+
+        generated_date = generate_random_date(start=from_date, end=to_date)
+        new_transaction(Session, first_user, second_user, transaction_date=generated_date, is_ipn=is_ipn)
 
     print('Generation of transaction DONE')

@@ -118,29 +118,46 @@ def add_user_manual(ipn, first_name, last_name, account_balance):
         return e
 
 
-def add_transaction_manual(sender_id, receiver_id, transaction_amount, transaction_category):
+def add_transaction_manual(sender_identificator, receiver_identificator, transaction_amount, transaction_category,
+                           transaction_date=None, is_ipn=False):
     """
     Add transaction
 
-    Якщо не задана сума транзакції, то максимальною суму переводу грошей з аккаунту задається наявна к-сть грошей
-    на рахунку відправника, і потім міняється баланс у відправника і отримувача, відносно радомною суми відправки
+    Changed: максимальною суму переводу грошей з аккаунту задається наявна к-сть грошей на рахунку відправника
+    І потім міняється баланс у відправника і отримувача, відносно радомною суми відправки
+    Те саме з датою
     """
 
     try:
         with Session.begin() as session:
-            sender = session.query(User).filter_by(id=sender_id).first()
-            receiver = session.query(User).filter_by(id=receiver_id).first()
+            if is_ipn:
+                sender = session.query(User).filter_by(ipn=sender_identificator).first()
+                sender_identificator = sender.id
+                receiver = session.query(User).filter_by(ipn=receiver_identificator).first()
+                receiver_identificator = receiver.id
+            else:
+                sender = session.query(User).filter_by(id=sender_identificator).first()
+                receiver = session.query(User).filter_by(id=receiver_identificator).first()
 
             if sender and receiver:
                 sender.account_balance = float(sender.account_balance) - transaction_amount
                 receiver.account_balance = float(receiver.account_balance) + transaction_amount
 
-                transaction = Transaction(
-                    sender_id=sender_id,
-                    receiver_id=receiver_id,
-                    transaction_amount=transaction_amount,
-                    transaction_category=transaction_category
-                )
+                if not transaction_date:
+                    transaction = Transaction(
+                        sender_id=sender_identificator,
+                        receiver_id=receiver_identificator,
+                        transaction_amount=transaction_amount,
+                        transaction_category=transaction_category
+                    )
+                else:
+                    transaction = Transaction(
+                        sender_id=sender_identificator,
+                        receiver_id=receiver_identificator,
+                        transaction_amount=transaction_amount,
+                        transaction_category=transaction_category,
+                        transaction_date=transaction_date
+                    )
                 session.add(transaction)
             else:
                 print("Sender or Receiver not found.")
@@ -176,7 +193,7 @@ def get_all_users_with_transactions_manual(limit=-1):
     :param: limit - к-сть юзерів, які мають вивестися, дефолтне значення = усі
     """
     if limit == -1:
-        limit = len(get_all_ids_manual(Session))
+        limit = len(get_all_ids_manual())
     with Session() as session:
         users = session.query(User).limit(limit).all()
         for number, user in enumerate(users):

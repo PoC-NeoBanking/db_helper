@@ -62,12 +62,14 @@ def add_user(Session, ipn, first_name, last_name, account_balance):
         return e
 
 
-def add_transaction(Session, sender_identificator, receiver_identificator, transaction_amount, transaction_category, is_ipn=False):
+def add_transaction(Session, sender_identificator, receiver_identificator, transaction_amount, transaction_category,
+                    transaction_date=None, is_ipn=False):
     """
     Add transaction
 
     Changed: максимальною суму переводу грошей з аккаунту задається наявна к-сть грошей на рахунку відправника
     І потім міняється баланс у відправника і отримувача, відносно радомною суми відправки
+    Те саме з датою
     """
 
     try:
@@ -85,12 +87,21 @@ def add_transaction(Session, sender_identificator, receiver_identificator, trans
                 sender.account_balance = float(sender.account_balance) - transaction_amount
                 receiver.account_balance = float(receiver.account_balance) + transaction_amount
 
-                transaction = Transaction(
-                    sender_id=sender_identificator,
-                    receiver_id=receiver_identificator,
-                    transaction_amount=transaction_amount,
-                    transaction_category=transaction_category
-                )
+                if not transaction_date:
+                    transaction = Transaction(
+                        sender_id=sender_identificator,
+                        receiver_id=receiver_identificator,
+                        transaction_amount=transaction_amount,
+                        transaction_category=transaction_category
+                    )
+                else:
+                    transaction = Transaction(
+                        sender_id=sender_identificator,
+                        receiver_id=receiver_identificator,
+                        transaction_amount=transaction_amount,
+                        transaction_category=transaction_category,
+                        transaction_date=transaction_date
+                    )
                 session.add(transaction)
             else:
                 print("Sender or Receiver not found.")
@@ -99,7 +110,7 @@ def add_transaction(Session, sender_identificator, receiver_identificator, trans
         print(f'Error adding transaction: {e}')
 
 
-def new_transaction(Session, sender, receiver, sum_of_transaction=None, is_ipn=False):
+def new_transaction(Session, sender, receiver, sum_of_transaction=None, transaction_date=None, is_ipn=False):
     """
     Add new transaction from sender to reciever
 
@@ -107,6 +118,7 @@ def new_transaction(Session, sender, receiver, sum_of_transaction=None, is_ipn=F
     :param sender: sender id
     :param receiver: receiver id
     :param sum_of_transaction: sum of transaction
+    :param transaction_date: date of transaction - default(now)
     :param is_ipn: False OPTIONAL - if it's ipn or not
     """
     with Session() as session:
@@ -120,8 +132,8 @@ def new_transaction(Session, sender, receiver, sum_of_transaction=None, is_ipn=F
     if sum_of_transaction is None:
         sum_of_transaction = round(random.uniform(0, int(max_balance)), 2)
     category = random.choice(list_categories)
-    add_transaction(Session, sender, receiver, transaction_amount=sum_of_transaction, transaction_category=category, is_ipn=is_ipn)
-
+    add_transaction(Session, sender, receiver, transaction_amount=sum_of_transaction, transaction_category=category,
+                    transaction_date=transaction_date, is_ipn=is_ipn)
 
 def get_user_by_ipn(Session, ipn):
     """
@@ -138,7 +150,6 @@ def get_user_by_ipn(Session, ipn):
         return None
     # print(user.id, user.first_name)
     return user
-
 
 def delete_user_by_ipn(Session, ipn):
     """
@@ -158,7 +169,6 @@ def delete_user_by_ipn(Session, ipn):
             session.rollback()
             print(f"Error deleting user: {e}")
 
-
 def delete_transaction_by_id(Session, transaction_id):
     """
     Delete transaction by its id
@@ -176,7 +186,6 @@ def delete_transaction_by_id(Session, transaction_id):
         except Exception as e:
             session.rollback()
             print(f"Error deleting transaction: {e}")
-
 
 def get_all_users_with_transactions(Session, limit=-1):
     """
@@ -198,16 +207,6 @@ def get_all_users_with_transactions(Session, limit=-1):
                 (Transaction.sender_id == user.id) | (Transaction.receiver_id == user.id)).all()
 
             print(len(transactions))
-            # for index, transaction in enumerate(transactions):
-            #     sender = session.query(User).filter_by(id=transaction.sender_id).first()
-            #     receiver = session.query(User).filter_by(id=transaction.receiver_id).first()
-            #
-            #     print(f"    {index + 1}) Transaction ID: {transaction.id}, Amount: {transaction.transaction_amount}")
-            #     print(f"    Sender: {sender.first_name} {sender.last_name}, "
-            #           f"Receiver: {receiver.first_name} {receiver.last_name}, "
-            #           f"Category: {transaction.transaction_category}")
-            # print()
-
 
 def get_user_with_transactions_by_ipn(Session, ipn):
     """
@@ -235,7 +234,6 @@ def get_user_with_transactions_by_ipn(Session, ipn):
               f"Category: {transaction.transaction_category}")
     print(f'Count of all transactions: {len(transactions)}')
 
-
 def counts_of_users(Session):
     """
     Count of all users(only number)
@@ -248,7 +246,6 @@ def counts_of_users(Session):
         print(user_count)
         return user_count
 
-
 def counts_of_transactions(Session):
     """
     Count of all transactions(only number)
@@ -260,7 +257,6 @@ def counts_of_transactions(Session):
         transaction_count = session.query(Transaction).count()
         print(transaction_count)
         return transaction_count
-
 
 def save_to_yaml_together(Session):
     """
@@ -291,7 +287,6 @@ def save_to_yaml_together(Session):
             yaml.dump(transactions_data, file, default_flow_style=False, allow_unicode=True)
 
     print("SUCCESS, saved all data in yaml TOGETHER")
-
 
 def save_to_yaml_separately(Session):
     """
@@ -328,7 +323,6 @@ def save_to_yaml_separately(Session):
                 yaml.dump(user_data, file, default_flow_style=False, allow_unicode=True)
     print("SUCCESS, saved all data in yaml SEPARATELY")
 
-
 def serialize_data(obj):
     """
     Use to convert decimal int in float
@@ -341,7 +335,6 @@ def serialize_data(obj):
     elif isinstance(obj, Decimal):
         return float(obj)
     raise TypeError(f"Type {type(obj)} not serializable")
-
 
 def save_to_json_together(Session):
     """
@@ -371,7 +364,6 @@ def save_to_json_together(Session):
         with open('data/transactions/transactions.json', 'w') as file:
             json.dump(transactions_data, file, ensure_ascii=False, indent=4, default=serialize_data)
     print("SUCCESS, saved all data in json TOGETHER")
-
 
 def save_to_json_separately(Session):
     """
@@ -408,7 +400,6 @@ def save_to_json_separately(Session):
                 json.dump(user_data, file, ensure_ascii=False, indent=4, default=serialize_data)
     print("SUCCESS, saved all data in json SEPARATELY")
 
-
 def all_users(Session, limit=10):
     with Session() as session:
         users = session.query(User).all()
@@ -419,7 +410,6 @@ def all_users(Session, limit=10):
     print("Showed successfully")
     return data
 
-
 def all_transactions(Session):
     with Session() as session:
         transactions = session.execute(select(Transaction)).scalars().all()
@@ -429,7 +419,6 @@ def all_transactions(Session):
             data.append(transaction_data)
     print("Showed successfully")
     return data
-
 
 def show_user_with_transactions(Session, user_id, user_ipn):
     """
@@ -468,7 +457,6 @@ def show_user_with_transactions(Session, user_id, user_ipn):
             f"    From_{transaction.sender_id}: {sender.first_name} {sender.last_name}, To_{transaction.receiver_id}: {receiver.first_name} {receiver.last_name}"
             f", Category: {transaction.transaction_category}")
     return all_data
-
 
 def show_details_of_transaction(Session, transaction_id):
     """
