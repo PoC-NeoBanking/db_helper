@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 
 from PyQt6.QtWidgets import QMainWindow, QApplication
 from sqlalchemy import create_engine
@@ -50,8 +51,10 @@ class MainWindow(QMainWindow, Ui_db_helper):
         self.showAll_users_pushButton.clicked.connect(self.show_all_users)
         self.showAll_transactions_pushButton.clicked.connect(self.show_all_transactions)
         self.ShowEverything_pushButton.clicked.connect(self.show_one_user_with_transactions)
-        self.ShowDetailesOfTransaction_pushButton_2.clicked.connect(self.show_detailed_transaction)
+        self.ShowDetailesOfTransaction_pushButton.clicked.connect(self.show_detailed_transaction)
         self.CountOfEverything_pushButton.clicked.connect(self.count_of_everything)
+
+        self.log("App start SUCCESS")
 
     def set_connection(self):
         login = self.login_lineEdit.text() if self.login_lineEdit.text() != '' else 'postgres'
@@ -67,24 +70,24 @@ class MainWindow(QMainWindow, Ui_db_helper):
             connection.close()
             self.Session = sessionmaker(bind=self.engine)
             self.stackedWidget.setCurrentIndex(1)
-            print("Successful connection")
+            self.log("Successful connection")
         except Exception as e:
-            print(f"Lost connection\n Smth went wrong: \n{e}")
+            self.log(f"Lost connection\n Smth went wrong: \n{e}")
 
     def create_db(self):
         try:
             Base.metadata.create_all(self.engine)
-            print("Successfully created new db")
+            self.log("Successfully created new db")
         except Exception as e:
-            print(f"Smth went wrong during creating db: \n{e}")
+            self.log(f"Smth went wrong during creating db: \n{e}")
 
     def drop_db(self):
         Base.metadata.drop_all(self.engine)
         try:
             Base.metadata.create_all(self.engine)
-            print("Successfully dropped db")
+            self.log("Successfully dropped db")
         except Exception as e:
-            print(f"Smth went wrong during dropping db: \n{e}")
+            self.log(f"Smth went wrong during dropping db: \n{e}")
 
     def show_all_users(self):
         try:
@@ -93,7 +96,7 @@ class MainWindow(QMainWindow, Ui_db_helper):
             for data in all_data:
                 self.listWidget.addItem(data)
         except Exception as e:
-            print(e)
+            self.log(e)
 
     def show_all_transactions(self):
         try:
@@ -102,7 +105,7 @@ class MainWindow(QMainWindow, Ui_db_helper):
             for data in all_data:
                 self.listWidget.addItem(data)
         except Exception as e:
-            print(e)
+            self.log(e)
 
     @staticmethod
     def _is_number(s):
@@ -114,30 +117,30 @@ class MainWindow(QMainWindow, Ui_db_helper):
 
     def show_one_user_with_transactions(self):
         user_id = int(
-            self.user_id_toShowing_lineEdit_2.text()) if self._is_number(
-            self.user_id_toShowing_lineEdit_2.text()) else ''
+            self.user_id_toShowing_lineEdit.text()) if self._is_number(
+            self.user_id_toShowing_lineEdit.text()) else ''
         user_ipn = int(
-            self.user_ipn_toShowing_lineEdit_2.text()) if self._is_number(
-            self.user_ipn_toShowing_lineEdit_2.text()) else ''
+            self.user_ipn_toShowing_lineEdit.text()) if self._is_number(
+            self.user_ipn_toShowing_lineEdit.text()) else ''
         try:
             self.listWidget.clear()
             all_data = show_user_with_transactions(Session=self.Session, user_id=user_id, user_ipn=user_ipn)
             for data in all_data:
                 self.listWidget.addItem(data)
         except Exception as e:
-            print(e)
+            self.log(e)
 
     def show_detailed_transaction(self):
         try:
             transaction_id = int(
-                self.transcation_id_toShowing_lineEdit_4.text()) if self._is_number(
-                self.transcation_id_toShowing_lineEdit_4.text()) else ''
+                self.transcation_id_toShowing_lineEdit.text()) if self._is_number(
+                self.transcation_id_toShowing_lineEdit.text()) else ''
             self.listWidget.clear()
             all_data = show_details_of_transaction(Session=self.Session, transaction_id=transaction_id)
             for data in all_data:
                 self.listWidget.addItem(data)
         except Exception as e:
-            print(e)
+            self.log(e)
 
     def count_of_everything(self):
         try:
@@ -149,7 +152,7 @@ class MainWindow(QMainWindow, Ui_db_helper):
             data = f'There are {counts_transactions} TRANSACTIONS'
             self.listWidget.addItem(data)
         except Exception as e:
-            print(e)
+            self.log(e)
 
     def create_entries_users(self):
         try:
@@ -161,13 +164,19 @@ class MainWindow(QMainWindow, Ui_db_helper):
                 self.users_upperBalanceLimit_lineEdit.text()) else 50_000
             if entry_amount != 0:
                 generate_random_users(self.Session, entry_amount, lower_limit, upper_limit, )
+                self.log('Generation of users DONE')
             else:
-                print('Sorry, you not to write how much to create')
+                self.log('Sorry, you need to write how much to create')
         except Exception as e:
-            print(f'Maybe you missed some arguments: \n{e}')
+            self.log(f'Maybe you missed some arguments: \n{e}')
 
     def create_entries_transactions(self):
         try:
+            dt_start = self.transactions_timeWindowStart_dateTimeEdit.dateTime().toString(self.transactions_timeWindowStart_dateTimeEdit.displayFormat())
+            dt_start_formatted = datetime.strptime(dt_start, '%d.%m.%Y, %H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S.%f')
+            dt_end = self.transactions_timeWindowEnd_dateTimeEdit.dateTime().toString(self.transactions_timeWindowEnd_dateTimeEdit.displayFormat())
+            dt_end_formatted = datetime.strptime(dt_end, '%d.%m.%Y, %H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S.%f') 
+
             entry_amount = int(self.transactions_entryAmount_lineEdit.text()) if self._is_number(
                 self.transactions_entryAmount_lineEdit.text()) else 0
             user_id = int(self.user_id_toGeneration_lineEdit.text()) if self._is_number(
@@ -175,15 +184,18 @@ class MainWindow(QMainWindow, Ui_db_helper):
             user_ipn = int(self.user_ipn_toGeneration_lineEdit.text()) if self._is_number(
                 self.user_ipn_toGeneration_lineEdit.text()) else ''
             if entry_amount == 0:
-                print('Sorry, you not to write how much to create')
+                self.log('Sorry, you need to write how much to create')
             elif user_ipn != '':
-                generate_random_transaction(self.Session, entry_amount, user_ipn=int(user_ipn))
+                generate_random_transaction(self.Session, entry_amount, user_ipn=int(user_ipn), from_date=dt_start_formatted, to_date=dt_end_formatted)
+                self.log('Generation of transaction DONE')
             elif user_id != '':
-                generate_random_transaction(self.Session, entry_amount, user=int(user_id))
+                generate_random_transaction(self.Session, entry_amount, user=int(user_id), from_date=dt_start_formatted, to_date=dt_end_formatted)
+                self.log('Generation of transaction DONE')
             else:
-                generate_random_transaction(self.Session, entry_amount)
+                generate_random_transaction(self.Session, entry_amount, from_date=dt_start_formatted, to_date=dt_end_formatted)
+                self.log('Generation of transaction DONE')
         except Exception as e:
-            print(f'Smth went wrong: \n{e}')
+            self.log(f'Smth went wrong: \n{e}')
 
     def save_one_json(self):
         save_to_json_together(Session=self.Session)
@@ -196,6 +208,10 @@ class MainWindow(QMainWindow, Ui_db_helper):
 
     def save_separated_yaml(self):
         save_to_yaml_separately(Session=self.Session)
+
+    def log(self, text):
+        current_time = datetime.now().strftime('%d.%m.%Y, %H:%M:%S')
+        self.logs_textBrowser.append(f"[{current_time}] {text}")
 
 
 def main():

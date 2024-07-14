@@ -28,7 +28,6 @@ def generate_random_users(Session, n, min_balance, max_balance):
         first_name = names.get_first_name()
         last_name = names.get_last_name()
         add_user(Session=Session, ipn=ipn, first_name=first_name, last_name=last_name, account_balance=balance)
-    print('Generation of users DONE')
 
 
 def generate_random_date(start=None, end=None):
@@ -96,5 +95,3 @@ def generate_random_transaction(Session, n, from_date=None, to_date=None,user=No
 
         generated_date = generate_random_date(start=from_date, end=to_date)
         new_transaction(Session, first_user, second_user, transaction_date=generated_date, is_ipn=is_ipn)
-
-    print('Generation of transaction DONE')
